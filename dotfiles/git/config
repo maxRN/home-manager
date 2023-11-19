@@ -1,0 +1,25 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[user]
+	name = Max Große
+	email = max12.gro@gmail.com
+[init]
+	defaultBranch = main
+[core]
+	excludesfile = ~/.gitignore_global
+	editor = nvim
+[alias]
+    mgd = "!git merge $1 && git branch -d $1; #"
+[diff]
+	tool = kdiff3
+[push]
+	autoSetupRemote = true
+
+[includeIf "gitdir:~/uni/"]
+    path = "config-uni"
+
+[includeIf "gitdir:~/work/"]
+    path = "config-work"
