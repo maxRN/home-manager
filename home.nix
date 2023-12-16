@@ -1,6 +1,16 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
+let
+  homeManagerHome = "/Users/maxrn/.config/home-manager";
+  link = config.lib.file.mkOutOfStoreSymlink;
+  linkHome = x: link "${homeManagerHome}" + "/${x}";
+in
 {
+  imports = [
+    ./work/work.nix
+    ./darwin/darwin.nix
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "maxrn";
@@ -15,15 +25,32 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
 
+    # Because for some reason they are not included by default.
+    # Would like to have the BSD ones for MacOS but these'll do.
+    man-pages
+
+    alacritty
+
+    vscode
+
+    # programming langs
+    go
+    rustup
+    python3
+    poetry
+    #opam
+
+    tkdiff
+
     bat
     btop
-    colima
     curl
-    docker-client
+    wget
     fd
     ffmpeg
     fnm
@@ -31,31 +58,23 @@
     kubernetes-helm
     neofetch
     neovim
-    opam
     pandoc
     ripgrep
     tmux
     tree
     tree-sitter
-
+    nixpkgs-fmt
     jq
+
+    gh
+
+    sqlite
+    sqlite-utils
+    shellcheck
 
     # fonts
     jetbrains-mono
     ia-writer-duospace
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -64,99 +83,90 @@
     ".config/tmux/tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/git/config".source = dotfiles/git/config;
     ".config/git/config-uni".source = dotfiles/git/config-uni;
-    ".config/git/config-work".source = dotfiles/git/config-work;
     ".config/git/ignore".source = dotfiles/git/ignore;
+    ".config/alacritty/alacritty.yml".source = linkHome "dotfiles/alacritty/alacritty.yml";
+    ".config/goku/karabiner.edn".source = linkHome "dotfiles/goku/karabiner.edn";
   };
 
-  # You can also manage environment variables but you will have to manually
-  # source
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/maxrn/etc/profile.d/hm-session-vars.sh
-  #
-  # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
     EDITOR = "nvim";
-    XDG_CONFIG_HOME="$HOME/.config";
-    XDG_CACHE_HOME="$HOME/.cache";
-    ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zshcompdump";
-    SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo";
-    # For Quarkus Projects
-    TESTCONTAINERS_RYUK_DISABLED="true";
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_CACHE_HOME = "$HOME/.cache";
+    ZSH_COMPDUMP = "$XDG_CACHE_HOME/zsh/zshcompdump";
+    SUMO_HOME = "/opt/homebrew/opt/sumo/share/sumo";
   };
 
-  programs.fzf = {
+  programs = {
+    fzf = {
       enable = true;
       enableZshIntegration = true;
-  };
+    };
 
-  programs.zsh = {
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+
+    home-manager.enable = true;
+
+    zsh = {
       enable = true;
       syntaxHighlighting = {
-          enable = true;
+        enable = true;
       };
       enableAutosuggestions = true;
       enableCompletion = true;
       shellAliases = {
-          hm = "home-manager";
-          skim ="open -a /Applications/Skim.app";
-          vim = "nvim";
-          zshconfig="nvim ~/.zshrc";
-          ohmyzsh = "nvim ~/.oh-my-zsh";
-          co="git checkout";
-          gdp="git diff -p";
-          glp="git log -p";
-          gsp="git diff --staged -p";
-          gbl="git branch --list";
-          gnew="git switch -c";
-          gs="git status";
-          # switch to main, if it errors switch to master;
-          gsm=" git switch main 2> /dev/null; [ $? -gt 0 ] && git switch master";
-          dbu="docker compose up -d --build";
-          fzvim="fzf | xargs nvim";
-          ll="ls -lah";
-          k="kubectl";
-          wirecard="/Applications/Wireshark.app/Contents/MacOS/Wireshark";
+        hm = "home-manager";
+        skim = "open -a /Applications/Skim.app";
+        vim = "nvim";
+        zshconfig = "nvim ~/.zshrc";
+        ohmyzsh = "nvim ~/.oh-my-zsh";
+        gdp = "git diff -p";
+        glp = "git log -p";
+        gsp = "git diff --staged -p";
+        gbl = "git branch --list";
+        gnew = "git switch -c";
+        gs = "git status";
+        # switch to main, if it errors switch to master;
+        gsm = " git switch main 2> /dev/null; [ $? -gt 0 ] && git switch master";
+        dbu = "docker compose up -d --build";
+        fzvim = "fzf | xargs nvim";
+        ll = "ls -lah";
+        k = "kubectl";
       };
       oh-my-zsh = {
-          enable = true;
-          plugins = [ "git" "docker" "docker-compose" "kubectl" "helm" ];
-          theme = "robbyrussell";
+        enable = true;
+        plugins = [ "git" "docker" "docker-compose" "kubectl" "helm" ];
+        theme = "robbyrussell";
       };
       initExtra = ''
-      bindkey '^ ' autosuggest-accept
+        bindkey '^ ' autosuggest-accept
 
-      zs() {
-          exec zsh;
-      }
+        eval "$(fnm env --use-on-cd)"
 
-      function inspiration() {
-          fortune | cowsay -f $(node -e "var c='$(cowsay -l | sed "1d" | paste -s -d " " -)'.split(' ');console.log(c[Math.floor(Math.random()*c.length)])") | lolcat --seed 0 --spread 1.0
-      }
+        function inspiration() {
+            fortune | cowsay -f $(node -e "var c='$(cowsay -l | sed "1d" | paste -s -d " " -)'.split(' ');console.log(c[Math.floor(Math.random()*c.length)])") | lolcat --seed 0 --spread 1.0
+        }
 
-      export PATH=$PATH:~/go/bin
-      export PATH="$PATH:$HOME/.dotfiles/bin"
-      export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+        export SDKMAN_DIR="$HOME/.sdkman"
+        [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-      export SDKMAN_DIR="$HOME/.sdkman"
-      [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-      export PATH="/Users/maxrn/bin:$PATH"
-      export PATH="/Users/maxrn/.dotfiles/scripts:$PATH"
-      export PATH="/Users/maxrn/.local/bin:$PATH"
-
-      # Add Visual Studio Code (code)
-      export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-      export PATH="/Users/maxrn/Library/Python/3.10/bin:$PATH"
-      export PATH="./node_modules/.bin:$PATH"
+        export PATH="$PATH:$HOME/.dotfiles/bin"
+        export PATH="/Users/maxrn/bin:$PATH"
+        export PATH="/Users/maxrn/.dotfiles/scripts:$PATH"
+        export PATH="/Users/maxrn/.local/bin:$PATH"
+        export PATH="/Users/maxrn/Library/Python/3.10/bin:$PATH"
+        export PATH="./node_modules/.bin:$PATH"
+        export PATH="$HOME/go/bin:$PATH"
       '';
+    };
+  };
+
+  nixpkgs.config = {
+    allowUnfree = true;
   };
 
   fonts.fontconfig.enable = true;
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }

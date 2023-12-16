@@ -3,3 +3,5 @@ workspace.code-workspace
 .durl.config
 fetch_token.sh
 draci_response.txt
+.envrc
+.direnv/
