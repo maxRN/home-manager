@@ -26,6 +26,15 @@ colors:
 # Live config reload (changes require restart)
 live_config_reload: true
 
+key_bindings:
+  - { key: A, mods: Alt, chars: "ä" }
+  - { key: A, mods: Alt|Shift, chars: "Ä" }
+  - { key: U, mods: Alt, chars: "ü" }
+  - { key: U, mods: Alt|Shift, chars: "Ü" }
+  - { key: O, mods: Alt, chars: "ö" }
+  - { key: O, mods: Alt|Shift, chars: "Ö" }
+  - { key: S, mods: Alt, chars: "ß" }
+
 # TODO: Implement color swap
 # # Colors begin
 # colors:
