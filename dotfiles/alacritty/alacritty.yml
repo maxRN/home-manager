@@ -34,6 +34,10 @@ key_bindings:
   - { key: O, mods: Alt, chars: "ö" }
   - { key: O, mods: Alt|Shift, chars: "Ö" }
   - { key: S, mods: Alt, chars: "ß" }
+  - { key: S, mods: Alt|Shift, chars: "ẞ" }
+
+  - { key: Left, mods: Alt, chars: "\x1bb" }
+  - { key: Right, mods: Alt, chars: "\x1bf" }
 
 # TODO: Implement color swap
 # # Colors begin

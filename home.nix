@@ -23,7 +23,7 @@ in
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "23.05"; # Please read the comment before changing.
+  home.stateVersion = "23.11"; # Please read the comment before changing.
 
 
   # The home.packages option allows you to install Nix packages into your
@@ -43,9 +43,8 @@ in
     rustup
     python3
     poetry
-    #opam
-
-    tkdiff
+    # Why is it broken??
+    # opam
 
     bat
     btop
@@ -80,21 +79,55 @@ in
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".config/tmux/tmux.conf".source = dotfiles/tmux/tmux.conf;
+    ".config/tmux".source = dotfiles/tmux;
     ".config/git/config".source = dotfiles/git/config;
     ".config/git/config-uni".source = dotfiles/git/config-uni;
     ".config/git/ignore".source = dotfiles/git/ignore;
-    ".config/alacritty/alacritty.yml".source = linkHome "dotfiles/alacritty/alacritty.yml";
-    ".config/goku/karabiner.edn".source = linkHome "dotfiles/goku/karabiner.edn";
+    ".config/alacritty".source = linkHome "dotfiles/alacritty";
+    ".config/goku".source = linkHome "dotfiles/goku";
+    ".config/nvim".source = linkHome "dotfiles/nvim";
+    ".config/bat".source = linkHome "dotfiles/bat";
   };
 
+  # TODO: Maybe this belongs to nix-darwin?
   home.sessionVariables = {
     EDITOR = "nvim";
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_CACHE_HOME = "$HOME/.cache";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
     ZSH_COMPDUMP = "$XDG_CACHE_HOME/zsh/zshcompdump";
     SUMO_HOME = "/opt/homebrew/opt/sumo/share/sumo";
   };
+
+  home.shellAliases = {
+    hm = "home-manager";
+    skim = "open -a /Applications/Skim.app";
+    vim = "nvim";
+    zshconfig = "nvim ~/.zshrc";
+    ohmyzsh = "nvim ~/.oh-my-zsh";
+    gdp = "git diff -p";
+    glp = "git log -p";
+    gsp = "git diff --staged -p";
+    gbl = "git branch --list";
+    gnew = "git switch -c";
+    gs = "git status";
+    # switch to main, if it errors switch to master;
+    gsm = " git switch main 2> /dev/null; [ $? -gt 0 ] && git switch master";
+    dbu = "docker compose up -d --build";
+    fzvim = "fzf | xargs nvim";
+    ll = "ls -lah";
+    k = "kubectl";
+  };
+
+  home.sessionPath = [
+    "$HOME/bin"
+    "$XDG_CONFIG_HOME/home-manager/dotfiles/scripts"
+    "$HOME/.local/bin"
+    "$HOME/Library/Python/3.10/bin"
+    "./node_modules/.bin"
+    "$HOME/go/bin"
+  ];
 
   programs = {
     fzf = {
@@ -117,25 +150,6 @@ in
       };
       enableAutosuggestions = true;
       enableCompletion = true;
-      shellAliases = {
-        hm = "home-manager";
-        skim = "open -a /Applications/Skim.app";
-        vim = "nvim";
-        zshconfig = "nvim ~/.zshrc";
-        ohmyzsh = "nvim ~/.oh-my-zsh";
-        gdp = "git diff -p";
-        glp = "git log -p";
-        gsp = "git diff --staged -p";
-        gbl = "git branch --list";
-        gnew = "git switch -c";
-        gs = "git status";
-        # switch to main, if it errors switch to master;
-        gsm = " git switch main 2> /dev/null; [ $? -gt 0 ] && git switch master";
-        dbu = "docker compose up -d --build";
-        fzvim = "fzf | xargs nvim";
-        ll = "ls -lah";
-        k = "kubectl";
-      };
       oh-my-zsh = {
         enable = true;
         plugins = [ "git" "docker" "docker-compose" "kubectl" "helm" ];
@@ -152,14 +166,6 @@ in
 
         export SDKMAN_DIR="$HOME/.sdkman"
         [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-        export PATH="$PATH:$HOME/.dotfiles/bin"
-        export PATH="/Users/maxrn/bin:$PATH"
-        export PATH="/Users/maxrn/.dotfiles/scripts:$PATH"
-        export PATH="/Users/maxrn/.local/bin:$PATH"
-        export PATH="/Users/maxrn/Library/Python/3.10/bin:$PATH"
-        export PATH="./node_modules/.bin:$PATH"
-        export PATH="$HOME/go/bin:$PATH"
       '';
     };
   };

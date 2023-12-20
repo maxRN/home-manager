@@ -6,7 +6,8 @@
  :main
  [
   {:des "fn to Ctrl" :rules [[:fn :left_control]]}
-  {:des "Caps Lock to Ctrl" :rules [[:caps_lock :left_control]]}
+  ; {:des "Caps Lock to Ctrl" :rules [[:caps_lock :left_control]]}
+  {:des "Caps Lock to Esc if alone, else Ctrl" :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
 
   ; For windows keyboards
   {:des "Don't ask (makes (`~) work)" :rules [[:grave_accent_and_tilde :non_us_backslash :corsair??]]}
