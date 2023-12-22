@@ -41,6 +41,15 @@ local servers = {
             telemetry = { enable = false },
         },
     },
+    astro = {},
+    black = {},
+    commitlint = {},
+    pylsp = {},
+    shellcheck = {},
+    stylua = {},
+    tailwindcss = {},
+    templ = {},
+    texlab = {},
 }
 
 -- Setup neovim lua configuration

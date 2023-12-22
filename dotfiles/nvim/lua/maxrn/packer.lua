@@ -9,7 +9,7 @@ return require("packer").startup(function(use)
 
     use({
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.4",
+        tag = "0.1.5",
         -- or                            , branch = '0.1.x',
         requires = { { "nvim-lua/plenary.nvim" } },
     })
@@ -58,7 +58,7 @@ return require("packer").startup(function(use)
     use({ "hrsh7th/cmp-nvim-lua" })
     use({ "hrsh7th/cmp-nvim-lsp-signature-help" })
     -- LaTeX
-    use({ "hrsh7th/cmp-omni" })
+    -- use({ "hrsh7th/cmp-omni" })
 
     -- Snippets
     use({ "L3MON4D3/LuaSnip" })
@@ -66,9 +66,6 @@ return require("packer").startup(function(use)
     use({ "j-hui/fidget.nvim", tag = "legacy" })
 
     use("folke/zen-mode.nvim")
-    -- use("github/copilot.vim")
-    --
-    use("lervag/vimtex")
 
     use("almo7aya/openingh.nvim")
 
