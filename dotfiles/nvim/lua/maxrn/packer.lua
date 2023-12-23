@@ -35,6 +35,7 @@ return require("packer").startup(function(use)
     use("theprimeagen/harpoon")
     use("mbbill/undotree")
     use("tpope/vim-surround")
+    use("tpope/vim-repeat")
 
     use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
     use({ "sindrets/diffview.nvim" })

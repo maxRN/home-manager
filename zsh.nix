@@ -9,7 +9,7 @@
     ohmyzsh = "nvim ~/.oh-my-zsh";
   };
 
-  zsh = {
+  programs.zsh = {
     enable = true;
     syntaxHighlighting = {
       enable = true;

@@ -1,7 +1,0 @@
-workspace.code-workspace
-.DS_Store
-.durl.config
-fetch_token.sh
-draci_response.txt
-.envrc
-.direnv/

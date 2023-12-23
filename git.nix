@@ -19,6 +19,16 @@
     userName = "Max Große";
     userEmail = "max12.gro@gmail.com";
 
+    ignores = [
+      "workspace.code-workspace"
+      ".DS_Store"
+      ".durl.config"
+      "fetch_token.sh"
+      ".draci_response.txt."
+      ".envrc"
+      ".direnv/"
+    ];
+
     includes = [
       {
         # use diffrent email & name for work
@@ -26,8 +36,8 @@
         condition = "gitdir:~/work/";
       }
       {
-          condition = "gitdir:~/uni/";
-          path = "~/uni/.gitconfig";
+        condition = "gitdir:~/uni/";
+        path = "~/uni/.gitconfig";
       }
     ];
 
